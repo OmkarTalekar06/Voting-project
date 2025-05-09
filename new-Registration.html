@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Registration</title>
+    <style>
+        body {
+            background: lightblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        img {
+            margin-left: 40%;
+            padding: 0;
+        }
+        div {
+            background-color: rgb(173, 199, 230);
+            height: 70vh;
+            width: 55vh;
+            padding: 20px;
+            border: 2px solid black;
+            border-radius: 10%;
+            color: rgba(0, 0, 0, 0.9);
+        }
+        h1 {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            text-align: center;
+            color: rgb(5, 5, 5);
+        }
+        label {
+            color: black;
+        }
+        input[type="email"], input[type="password"] {
+            height: 35px;
+            width: 50vh;
+            margin-top: 15px;
+        }
+        #submit {
+            margin-top: 10px;
+            margin-left: 100px;
+            height: 50px;
+            width: 100px;
+            border-radius: 10%;
+        }
+        .terms-label {
+            display: block;
+            margin-top: 15px;
+        }
+        #terms {
+            margin-left: 10px;
+        }
+        #newregistration:hover{
+            background-color: rgb(61, 123, 143);
+        }
+    </style>
+</head>
+<body>
+    <form id="registerForm">
+        <div id="newregistration">
+            <img src="logo.png" height="50px" width="60px">
+            <h1>New Registration</h1>
+
+            <label for="email">Email : </label><br>
+            <input type="email" name="email" id="email" required><br>
+
+            <label for="password">Password : </label><br>
+            <input type="password" name="password" id="password" required><br>
+
+            <label class="terms-label">
+                Agree terms and conditions
+                <input type="checkbox" id="terms" name="terms" required>
+            </label><br>
+
+            <input type="submit" id="submit">
+        </div>  
+    </form>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      
+        const firebaseConfig = {
+          apiKey: "AIzaSyDlApNiMKmhakwT8Bu2uhH8d8-P_H5BuBU",
+          authDomain: "voting-website-86dba.firebaseapp.com",
+          projectId: "voting-website-86dba",
+          storageBucket: "voting-website-86dba.firebasestorage.app",
+          messagingSenderId: "609873847109",
+          appId: "1:609873847109:web:e36a8c6e9cdb48ccabd42c",
+          measurementId: "G-NS7YFG9D2D"
+        };
+      
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+      
+        const registerForm = document.getElementById("registerForm");
+      
+        registerForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+      
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+      
+          try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+      
+            // Store user data in Firestore with "voted: false"
+            await setDoc(doc(db, "voters", user.uid), {
+              email: user.email,
+              voted: false
+            });
+      
+            alert("Registration successful!");
+            window.location.href = "index.html"; // Redirect to login page after successful registration
+          } catch (error) {
+            alert("Error: " + error.message);
+          }
+        });
+    let timeout;
+    
+    function startsessiontimer() {
+        timeout = setTimeout(() => {
+            alert("Session Timeout!! You will be shortly redirected to login page");
+            Window.location.href = "index.html";
+        }, 6000);
+    }
+
+    function resettimer() {
+        clearTimeout(timeout);
+        startsessiontimer;
+    }
+
+    window.onload = startsessiontimer;
+    document.onclick = resettimer;
+    document.onmousemove = resettimer;
+    document.onkeypress = resettimer;
+    document.ontouchstart = resettimer;
+</script>
+</body>
+</html>

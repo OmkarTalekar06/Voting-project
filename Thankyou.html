@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank you</title>
+</head>
+<style>
+    body{
+        display: flex;
+        align-items: center;
+        justify-content:center;
+        margin: 0;
+        height: 100vh;
+
+    }
+    div{
+        text-align: center;
+        align-items: center;
+    }
+</style>
+<body>
+    <div>
+    <h1>Thank you for Voting</h1>
+    </div>  
+    <script>
+        let timeout;
+
+        function startsessiontimer() {
+            timeout = setTimeout(() => {
+                alert("You have logged out");
+                window.location.href = "https://www.google.co.in"
+            }, 1000);
+        }
+
+        window.onload = startsessiontimer();
+    </script>  
+</body>
+</html>

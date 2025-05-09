@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voting Page</title>
+  <style>
+    body {
+      background: lightblue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    img {
+      margin-left: 40%;
+    }
+    div {
+      background-color: rgb(173, 199, 230);
+      height: 75vh;
+      width: 55vh;
+      padding: 20px;
+      border: 2px solid black;
+      border-radius: 10%;
+      color: black;
+    }
+    h1, h2, h4 {
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      text-align: center;
+    }
+    input[type="number"] {
+      height: 20px;
+      width: 50px;
+      margin-right: 10px;
+    }
+    #votingdiv:hover {
+      background-color: rgb(61, 123, 143);
+    }
+  </style>
+</head>
+<body>
+  <div id="votingdiv">
+    <img src="logo.png" height="50px" width="60px">
+    <h1>Voting Page</h1>
+    <h2>Results</h2>
+    
+    <p><input type="number" id="modi" readonly /> Narendra Modi</p>
+    <p><input type="number" id="trumph" readonly /> Donald Trump</p>
+    <p><input type="number" id="meloni" readonly /> Georgia Meloni</p>
+    <p><input type="number" id="putin" readonly /> Vladimir Putin</p>
+
+    <h4>Your vote has been registered successfully</h4>
+  </div>
+
+  <!-- Only compat version of Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlApNiMKmhakwT8Bu2uhH8d8-P_H5BuBU",
+      authDomain: "voting-website-86dba.firebaseapp.com",
+      projectId: "voting-website-86dba",
+      storageBucket: "voting-website-86dba.appspot.com",
+      messagingSenderId: "609873847109",
+      appId: "1:609873847109:web:e36a8c6e9cdb48ccabd42c",
+      measurementId: "G-NS7YFG9D2D"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const candidates = ["Narendra Modi", "Donald Trump", "Georgia Meloni", "Vladimir Putin"];
+    const ids = ["modi", "trumph", "meloni", "putin"];
+
+    db.collection("votes").onSnapshot((snapshot) => {
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const index = candidates.indexOf(data.name);
+        if (index !== -1) {
+          document.getElementById(ids[index]).value = data.count;
+        }
+      });
+    });
+
+    let timeout;
+    
+    function startsessiontimer() {
+        timeout = setTimeout(() => {
+            alert("Session Timeout!! You will be shortly logged out :)");
+            window.location.href = "Thankyou.html";
+        }, 30000);
+    }
+
+    function resettimer() {
+        clearTimeout(timeout);
+        startsessiontimer();
+    }
+
+    window.onload = startsessiontimer();
+    document.onclick = resettimer();
+    document.onmousemove = resettimer();
+    document.onkeypress = resettimer();
+    document.ontouchstart = resettimer();
+  </script>
+</body>
+</html>

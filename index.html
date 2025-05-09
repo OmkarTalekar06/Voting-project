@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            background: lightblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        img {
+            margin-left: 40%;
+            padding: 0;
+        }
+        div {
+            background-color: rgb(173, 199, 230);
+            height: 70vh;
+            width: 55vh;
+            padding: 20px;
+            border: 2px solid black;
+            border-radius: 10%;
+            color: rgba(0, 0, 0, 0.9);
+        }
+        h1 {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            text-align: center;
+            color: rgb(5, 5, 5);
+        }
+        label {
+            color: black;
+        }
+        input {
+            height: 35px;
+            width: 50vh;
+            margin-top: 15px;
+        }
+        button {
+            margin-left: 50px;
+            margin-top: 10px;
+            height: 50px;
+            width: 80px;
+            border-radius: 10%;
+        }
+        #log:hover {
+            background-color: rgb(61, 123, 143);
+        }
+    </style>
+</head>
+<body>
+    <form id="loginForm">
+        <div id="log">
+            <img src="logo.png" height="50px" width="60px">
+            <h1>Login</h1>
+            <label for="username">Username: </label>
+            <input type="email" id="email" required>
+            <br>
+            <label for="password">Password: </label>
+            <input type="password" id="password" required>
+            <br><br>
+            <button type="submit">Submit</button>
+            <a href="new-Registration.html"><button type="button">Register</button></a>
+        </div>
+    </form>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      
+        const firebaseConfig = {
+          apiKey: "AIzaSyDlApNiMKmhakwT8Bu2uhH8d8-P_H5BuBU",
+          authDomain: "voting-website-86dba.firebaseapp.com",
+          projectId: "voting-website-86dba",
+          storageBucket: "voting-website-86dba.firebasestorage.app",
+          messagingSenderId: "609873847109",
+          appId: "1:609873847109:web:e36a8c6e9cdb48ccabd42c",
+          measurementId: "G-NS7YFG9D2D"
+        };
+      
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+      
+        const loginForm = document.getElementById("loginForm");
+      
+        loginForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+      
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+      
+          try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+      
+            // Get user document from Firestore to check if they have voted
+            const userDocRef = doc(db, "voters", user.uid);
+            const userDoc = await getDoc(userDocRef);
+      
+            if (userDoc.exists() && userDoc.data().voted === true) {
+              alert("You have already voted!");
+              window.location.href = "Thankyou.html"; // Redirect to Thank you page
+            } else {
+              alert("Welcome " + user.email);
+              window.location.href = "voting-page.html"; // Redirect to voting page if not voted
+            }
+          } catch (error) {
+            alert("Error: " + error.message);
+          }
+        });
+</script>
+</body>
+</html>
