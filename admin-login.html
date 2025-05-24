@@ -1,0 +1,111 @@
+</head>
+<style>
+    body {
+        background: lightblue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    img {
+        margin-left: 40%;
+        padding: 0;
+    }
+    div {
+        background-color: rgb(173, 199, 230);
+        height: 70vh;
+        width: 55vh;
+        padding: 20px;
+        border: 2px solid black;
+        border-radius: 10%;
+        color: rgba(0, 0, 0, 0.9);
+    }
+    h1 {
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        text-align: center;
+        color: rgb(5, 5, 5);
+    }
+    label {
+        color: black;
+    }
+    input {
+        height: 35px;
+        width: 50vh;
+        margin-top: 15px;
+    }
+    button {
+        margin-left:115px;
+        margin-top: 10px;
+        height: 50px;
+        width: 80px;
+        border-radius: 10%;
+    }
+    #log:hover {
+        background-color: rgb(61, 123, 143);
+    }
+</style>
+<body>
+    <form id="AdminForm">
+        <div id="log">
+            <img src="logo.png" height="50px" width="60px">
+            
+            <h1> Admin Login</h1>
+            <label for="username">Admin Username: </label>
+            <input type="email" id="email" required>
+            <br>
+            <label for="password">Admin Password: </label>
+            <input type="password" id="password" required>
+            <br><br>
+            <button type="submit">Login</button>
+        </div>
+    </form>
+    </body>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlApNiMKmhakwT8Bu2uhH8d8-P_H5BuBU",
+      authDomain: "voting-website-86dba.firebaseapp.com",
+      projectId: "voting-website-86dba",
+      storageBucket: "voting-website-86dba.appspot.com",
+      messagingSenderId: "609873847109",
+      appId: "1:609873847109:web:e36a8c6e9cdb48ccabd42c",
+      measurementId: "G-NS7YFG9D2D"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const adminForm = document.getElementById("AdminForm");
+
+    adminForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const emailInput = document.getElementById("email").value;
+      const passwordInput = document.getElementById("password").value;
+
+      try {
+        const adminDocRef = doc(db, "admins", "admin2"); // Document with ID 'admin1'
+        const adminDoc = await getDoc(adminDocRef);
+
+        if (adminDoc.exists()) {
+          const adminData = adminDoc.data();
+          if (adminData.email === emailInput && adminData.password === passwordInput) {
+            alert("Welcome Admin!");
+            window.location.href = "results.html";
+          } else {
+            alert("Incorrect email or password.");
+          }
+        } else {
+          alert("Admin credentials not found.");
+        }
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+  </script>
+</html>
+      
+    
